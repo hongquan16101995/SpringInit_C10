@@ -26,7 +26,7 @@ public class HomeController {
         return "view/list";
     }
 
-    @GetMapping("/create")
+    @GetMapping("/create/*")
     public String create() {
         return "view/creat";
     }
@@ -49,7 +49,7 @@ public class HomeController {
         return "view/list";
     }
 
-    @GetMapping
+    @GetMapping("/m1")
     public ModelAndView m1() {
         ModelAndView modelAndView = new ModelAndView("view/list");
         //đối tượng ModelAndView: gắn kèm giá trị dự liệu và view-name

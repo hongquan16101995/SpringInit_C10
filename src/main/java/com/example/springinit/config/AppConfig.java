@@ -1,5 +1,8 @@
 package com.example.springinit.config;
 
+import com.example.springinit.model.Employee;
+import com.example.springinit.service.ICrudService;
+import com.example.springinit.service.impl.EmployeeServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -20,4 +23,10 @@ public class AppConfig implements WebMvcConfigurer {
         viewResolver.setSuffix(".jsp");
         return viewResolver;
     }
+
+    //hành động khai báo Bean thủ công, sử dụng annotation @Bean và các phương thức tương ứng
+//    @Bean
+//    public ICrudService<Employee> iCrudService() {
+//        return new EmployeeServiceImpl();
+//    }
 }
