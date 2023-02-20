@@ -7,6 +7,7 @@ public class Employee {
     private Integer age;
     private Double salary;
     private String address;
+    private String imagePath;
 
     public Employee() {
     }
@@ -17,6 +18,15 @@ public class Employee {
         this.age = age;
         this.salary = salary;
         this.address = address;
+    }
+
+    public Employee(String name, Integer age, Double salary, String address, String imagePath) {
+        this.id = ++INDEX;
+        this.name = name;
+        this.age = age;
+        this.salary = salary;
+        this.address = address;
+        this.imagePath = imagePath;
     }
 
     public Long getId() {

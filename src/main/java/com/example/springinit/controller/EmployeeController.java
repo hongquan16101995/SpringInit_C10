@@ -4,9 +4,11 @@ import com.example.springinit.model.Employee;
 import com.example.springinit.service.ICrudService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/employees")
@@ -17,46 +19,50 @@ public class EmployeeController {
 
     @GetMapping
     public ModelAndView findAll() {
-        ModelAndView modelAndView = new ModelAndView("employee/list");
+        ModelAndView modelAndView = new ModelAndView("employees/list");
         modelAndView.addObject("employees", iCrudService.findAll());
         return modelAndView;
     }
 
     @GetMapping("/create")
-    public String createForm(Model model) {
-        model.addAttribute("employee", new Employee());
-        return "employee/create";
-    }
-
-    @PostMapping
-    public ModelAndView createEmployee(@ModelAttribute Employee employee) {
-        iCrudService.save(employee);
-        ModelAndView modelAndView = new ModelAndView("employee/list");
+    public ModelAndView createForm(HttpServletRequest request) {
+        ModelAndView modelAndView = new ModelAndView("employees/form");
+        modelAndView.addObject("employee", new Employee());
         modelAndView.addObject("employees", iCrudService.findAll());
         return modelAndView;
+    }
+
+    @PostMapping("/create")
+    public String create(@ModelAttribute Employee employee,
+                         RedirectAttributes redirect) {
+        iCrudService.save(employee);
+        redirect.addFlashAttribute("message", "Create successfully!");
+        return "redirect:/employees";
+        //sử dụng String Redirect để có thể chuyển hướng request mới, tránh duplicate dữ liệu
     }
 
     @GetMapping("/update/{id}")
-    public String updateForm(Model model,
-                             @PathVariable Long id) {
-        model.addAttribute("employee", iCrudService.findById(id));
-        return "employee/update";
+    public ModelAndView updateForm(@PathVariable Long id) {
+        ModelAndView modelAndView = new ModelAndView("employees/form");
+        modelAndView.addObject("employee", iCrudService.findById(id));
+        return modelAndView;
     }
 
-    @PostMapping("/update")
-    public ModelAndView updateEmployee(@ModelAttribute Employee employee) {
+    @PostMapping("/update/{id}")
+    public String update(@ModelAttribute Employee employee,
+                         @PathVariable Long id,
+                         RedirectAttributes redirect) {
+        employee.setId(id);
         iCrudService.save(employee);
-        ModelAndView modelAndView = new ModelAndView("employee/list");
-        modelAndView.addObject("employees", iCrudService.findAll());
-        return modelAndView;
+        redirect.addFlashAttribute("message", "Update successfully!");
+        return "redirect:/employees";
     }
 
     @GetMapping("/delete/{id}")
-    public ModelAndView delete(@PathVariable Long id) {
+    public String delete(@PathVariable Long id,
+                         RedirectAttributes redirect) {
         iCrudService.deleteById(id);
-        ModelAndView modelAndView = new ModelAndView("employee/list");
-        modelAndView.addObject("employees", iCrudService.findAll());
-        return modelAndView;
+        redirect.addFlashAttribute("message", "Delete successfully!");
+        return "redirect:/employees";
     }
-
 }
