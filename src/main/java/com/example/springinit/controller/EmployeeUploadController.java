@@ -1,30 +1,42 @@
 package com.example.springinit.controller;
 
+import com.example.springinit.model.City;
 import com.example.springinit.model.Employee;
 import com.example.springinit.service.ICrudService;
+import com.example.springinit.service.impl.CityServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+
 @Controller
-@RequestMapping("/employees")
-public class EmployeeController {
+@RequestMapping("/em")
+public class EmployeeUploadController {
+
+    @Value("${upload}")
+    private String uploadPath;
+
     @Autowired
-    //annotation đánh dấu việc tiêm 1 bean thông qua DI vào 1 bean khác để sử dụng
     private ICrudService<Employee> iCrudService;
 
     @GetMapping
     public ModelAndView findAll() {
-        ModelAndView modelAndView = new ModelAndView("employees/list");
+        ModelAndView modelAndView = new ModelAndView("upload/list");
         modelAndView.addObject("employees", iCrudService.findAll());
         return modelAndView;
     }
 
     @GetMapping("/create")
     public ModelAndView createForm() {
-        ModelAndView modelAndView = new ModelAndView("employees/form");
+        ModelAndView modelAndView = new ModelAndView("upload/form");
         modelAndView.addObject("employee", new Employee());
         return modelAndView;
     }
@@ -34,13 +46,12 @@ public class EmployeeController {
                          RedirectAttributes redirect) {
         iCrudService.save(employee);
         redirect.addFlashAttribute("message", "Create successfully!");
-        return "redirect:/employees";
-        //sử dụng String Redirect để có thể chuyển hướng request mới, tránh duplicate dữ liệu
+        return "redirect:/em";
     }
 
     @GetMapping("/update/{id}")
     public ModelAndView updateForm(@PathVariable Long id) {
-        ModelAndView modelAndView = new ModelAndView("employees/form");
+        ModelAndView modelAndView = new ModelAndView("upload/form");
         modelAndView.addObject("employee", iCrudService.findById(id));
         return modelAndView;
     }
@@ -52,7 +63,7 @@ public class EmployeeController {
         employee.setId(id);
         iCrudService.save(employee);
         redirect.addFlashAttribute("message", "Update successfully!");
-        return "redirect:/employees";
+        return "redirect:/em";
     }
 
     @GetMapping("/delete/{id}")
@@ -60,6 +71,33 @@ public class EmployeeController {
                          RedirectAttributes redirect) {
         iCrudService.deleteById(id);
         redirect.addFlashAttribute("message", "Delete successfully!");
-        return "redirect:/employees";
+        return "redirect:/em";
     }
+
+//    @Autowired
+//    private CityServiceImpl cityService;
+//
+//    @GetMapping("/create1")
+//    public ModelAndView createForm1() {
+//        ModelAndView modelAndView = new ModelAndView("test/form");
+//        modelAndView.addObject("employee", new Employee());
+//        modelAndView.addObject("cities", cityService.findAll());
+//        return modelAndView;
+//    }
+//
+//    @PostMapping("/create1")
+//    public String create1(@ModelAttribute Employee employee,
+//                         RedirectAttributes redirect) {
+//        MultipartFile image = employee.getImage();
+//        String fileName = image.getOriginalFilename();
+//        try {
+//            FileCopyUtils.copy(image.getBytes(), new File(uploadPath + fileName));
+//        } catch (IOException ex) {
+//            ex.printStackTrace();
+//        }
+//        employee.setImagePath(fileName);
+//        iCrudService.save(employee);
+//        redirect.addFlashAttribute("message", "Create successfully!");
+//        return "redirect:/em";
+//    }
 }

@@ -10,17 +10,23 @@
         h1 {
             text-align: center;
         }
+
+        img {
+            width: 100px;
+            height: 100px;
+        }
     </style>
 </head>
 <body>
 <div class="container">
     <h1>List employee</h1>
     <h3 th:text="${message}"></h3>
-    <a class="btn btn-primary" th:href="@{/employees/create}">Create new employee</a>
+    <a class="btn btn-primary" th:href="@{/em/create}">Create new employee</a>
     <table class="table table-striped">
         <thead>
         <tr>
             <th>STT</th>
+            <th>Avatar</th>
             <th>Name</th>
             <th>Age</th>
             <th>Salary</th>
@@ -31,21 +37,20 @@
         <tbody>
         <tr th:each="e, status : ${employees}">
             <td th:text="${status.count}"></td>
+            <td><img th:src="@{'/' + ${e.imagePath}}" alt=""></td>
             <td th:text="${e.name}"></td>
             <td th:text="${e.age}"></td>
             <td th:text="${e.salary}"></td>
             <td th:text="${e.address}"></td>
             <td><a class="btn btn-warning"
-                   th:href="@{/employees/update/{id}(id=${e.id})}">Update</a>
+                   th:href="@{/em/update/{id}(id=${e.id})}">Update</a>
             </td>
             <td><a class="btn btn-danger"
-                   th:href="@{/employees/delete/__${e.id}__}">Delete</a>
+                   th:href="@{/em/delete/__${e.id}__}">Delete</a>
             </td>
         </tr>
         </tbody>
     </table>
-    <!--Gắn Fragment vào HTML thông qua insert hoặc replace của Thymeleaf-->
-    <div th:insert="employees/layout :: footer"></div>
 </div>
 </body>
 </html>

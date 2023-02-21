@@ -26,6 +26,11 @@ public class HomeController {
         return "view/list";
     }
 
+    @GetMapping("/menu")
+    public String indexHome() {
+        return "view/index";
+    }
+
     @GetMapping("/create/*")
     public String create() {
         return "view/creat";
